@@ -4,8 +4,11 @@ const PORT = 8080;
 
 app.set("view engine", "ejs");
 
-function generateRandomString() {}
+function generateRandomString() {
+  return Math.random().toString(36).substring(2,8)
 
+}
+console.log(generateRandomString())
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
@@ -46,7 +49,9 @@ app.get("/urls/:id", (req, res) => {
 })
 
 app.post("/urls", (req, res) => {
-  console.log(req.body); // Log the POST request body to the console
+  const id = generateRandomString()
+  urlDatabase[id] = req.body.longURL
+  console.log(urlDatabase); // Log the POST request body to the console
   res.send("Ok"); // Respond with 'Ok' (we will replace this)
 });
 
