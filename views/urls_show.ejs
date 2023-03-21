@@ -23,6 +23,13 @@
         <p class="card-text">
           Short URL ID: <a href="/u/<%= shortUrl %>"><%= shortUrl %></a>
         </p>
+        <h5 class="card-title">Edit</h5>
+        <td>
+          <form method="POST" action="/urls/<%= shortUrl %>/">
+          URL:  
+          <input type="text" name="longUrl" placeholder="http://">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form></td>
       </div>
       <div class="card-footer text-muted"></div>
     </div>
