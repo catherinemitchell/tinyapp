@@ -72,3 +72,7 @@ app.post("/urls/:id/", (req, res) => {
    urlDatabase[id] = longUrl
   res.redirect("/urls")
 })
+
+app.post("/login", (req, res) => {
+  res.cookie('username', req.body.username).redirect('/urls');
+})
