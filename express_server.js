@@ -1,5 +1,8 @@
 const express = require("express");
+const cookieParser = require('cookie-parser');
 const app = express();
+app.use(cookieParser());
+
 const PORT = 8080;
 
 app.set("view engine", "ejs");
@@ -33,18 +36,28 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = { 
+    username: req.cookies["username"],
+    urls: urlDatabase 
+  };
   res.render("urls_index", templateVars);
 });
 
 // this will get new form.
-app.get("/urls/new", (req, res) => {   
-  res.render("urls_new");
+app.get("/urls/new", (req, res) => {  
+  const templateVars = {
+    username: req.cookies["username"]
+  } 
+  res.render("urls_new", templateVars);
 });
 
 app.get("/urls/:id", (req, res) => {
   const {id} = req.params
-  const templateVars = { shortUrl: id, longURL: urlDatabase[id]};
+  const templateVars = { 
+    shortUrl: id, 
+    longURL: urlDatabase[id],
+    username: req.cookies["username"]  
+  };
   res.render("urls_show", templateVars);
 })
 
