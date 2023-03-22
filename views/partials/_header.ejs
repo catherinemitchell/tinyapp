@@ -20,9 +20,9 @@
         </div>
         <div class="d-flex">
           <td>
-            <% if (username) { %>
+            <% if (user) { %>
               <ul>
-                  <li> Logged in as: <%= username %>
+                  <li> Logged in as: <%= user.email %>
                     <form method="POST" action="/logout">  
                     <button type="submit" class="btn btn-primary">Logout</button>
                     </form></li>
