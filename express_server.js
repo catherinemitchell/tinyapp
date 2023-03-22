@@ -112,11 +112,23 @@ app.post("/urls/:id/", (req, res) => {
   res.redirect("/urls")
 })
 
-app.post("/login", (req, res) => {
-  const user = getUserByEmail(req.body.email)
+app.get("/login", (req, res) => {
   
-  res.cookie('user_id', user.id).redirect('/urls');
+  const userID = req.cookies['user_id'];
+  if (userID) {
+    return res.redirect("/urls")
+  } 
+  
+  const user = users[userID]
+  res.render('urls_login', { user })
 })
+
+
+// app.post("/login", (req, res) => {
+//   const user = getUserByEmail(req.body.email)
+  
+//   res.cookie('user_id', user.id).redirect('/urls');
+// })
 
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
