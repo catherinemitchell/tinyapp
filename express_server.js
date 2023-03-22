@@ -95,3 +95,11 @@ app.post("/logout", (req, res) => {
 
   res.redirect("/urls");
 })
+
+app.get("/register", (req, res) => {
+
+  const username = req.cookies['username'];
+  const user = urlDatabase[username];
+  const templateVars = { username: username}
+  res.render('urls_registration', templateVars)
+})
