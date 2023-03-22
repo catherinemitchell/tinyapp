@@ -17,6 +17,7 @@
         <div class="d-flex">
           <a class="nav-item nav-link" href="/urls">My URLs</a>
           <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
+         
         </div>
         <div class="d-flex">
           <td>
@@ -28,12 +29,8 @@
                     </form></li>
               </ul>
             <% } else { %>
-              <ul>
-                <form method="POST" action="/login" name="username">  
-                  <input type="text" name="username" placeholder="username" required>
-                  <button type="submit" class="btn btn-primary">Login</button>
-                  </form>
-              </ul>
+              <a class="nav-item nav-link" href="/login">Login</a>
+              <a class="nav-item nav-link" href="/register">Register</a>
             <% } %>
           </td>
         </div>
