@@ -176,7 +176,7 @@ app.post("/urls/:id/", (req, res) => {
     return res.status(403).send('user not logged in');
   }
 
-  if (req.cookies["user_id"] !== urlDatabase[id]) {
+  if (req.cookies["user_id"] !== urlDatabase[id].userID) {
     return res.status(403).send('user does not own the URL');
   }
 
