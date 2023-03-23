@@ -1,12 +1,15 @@
 const express = require("express");
 const cookieParser = require('cookie-parser');
+const bcrypt = require("bcryptjs");
 const app = express();
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
+app.set("view engine", "ejs");
+
 
 const PORT = 8080;
 
-app.set("view engine", "ejs");
+
 
 function generateRandomString() {
   return Math.random().toString(36).substring(2, 8);
@@ -245,6 +248,11 @@ app.post("/login", (req, res) => {
 
   const user = getUserByEmail(req.body.email);
   // console.log(user, user.password, req.body.password)
+
+  const password = req.body.password;
+  const hashedPassword = bcrypt.hashSync(password, 10);
+  bcrypt.compareSync("password", hashedPassword);
+
   if (!user) {
     res.status(403).send('That user does not exist!');
     return;
@@ -299,7 +307,7 @@ app.post("/register", (req, res) => {
   users[id] = {
     id: id,
     email: email,
-    password: password
+    password: bcrypt.hashSync(password, 10)
   };
 
   res.cookie('user_id', id);
