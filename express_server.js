@@ -16,7 +16,7 @@ console.log(generateRandomString())
 function getUserByEmail(email) {
   for (let user in users) {
     if (users[user].email === email) {
-    return user
+    return users[user];
     }
   } 
   return null
@@ -72,7 +72,7 @@ app.get("/urls", (req, res) => {
 // this will get new form.
 app.get("/urls/new", (req, res) => {  
   const templateVars = {
-    username: req.cookies["user_id"]
+    user: users[req.cookies["user_id"]]
   } 
   res.render("urls_new", templateVars);
 });
@@ -82,7 +82,7 @@ app.get("/urls/:id", (req, res) => {
   const templateVars = { 
     shortUrl: id, 
     longURL: urlDatabase[id],
-    username: req.cookies["user_id"]  
+    user: users[req.cookies["user_id"]]  
   };
   res.render("urls_show", templateVars);
 })
@@ -123,7 +123,19 @@ app.get("/login", (req, res) => {
   res.render('urls_login', { user })
 })
 
+app.post("/login", (req, res) => {
 
+  const user = getUserByEmail(req.body.email);
+  // console.log(user, user.password, req.body.password)
+  if (!user) {
+    res.status(403).send('That user does not exist!');
+    return;
+  } else if (user.password !== req.body.password) {
+    res.status(403).send('Invalid credentials!');
+    return
+  } 
+    res.cookie('user_id', user.id).redirect('/urls')
+  })
 // app.post("/login", (req, res) => {
 //   const user = getUserByEmail(req.body.email)
   
@@ -133,7 +145,7 @@ app.get("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
 
-  res.redirect("/urls");
+  res.redirect("/login");
 })
 
 app.get("/register", (req, res) => {
@@ -159,7 +171,6 @@ app.post("/register", (req, res) => {
   }
   const user = getUserByEmail(email);
 console.log(user)
-
 
   if (user) {
     res.status(400).send('That user already exists!');
