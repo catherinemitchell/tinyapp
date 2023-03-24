@@ -2,6 +2,7 @@ const express = require("express");
 const cookieParser = require('cookie-parser');
 const bcrypt = require("bcryptjs");
 const cookieSession = require('cookie-session')
+const { getUserByEmail } = require('./helpers.js')
 const app = express();
 app.use(cookieParser());
 
@@ -25,14 +26,14 @@ function generateRandomString() {
 console.log(generateRandomString());
 
 
-function getUserByEmail(email) {
-  for (let user in users) {
-    if (users[user].email === email) {
-      return users[user];
-    }
-  }
-  return null;
-}
+// function getUserByEmail(email, database) {
+//   for (let user in users) {
+//     if (users[user].email === email) {
+//       return users[user];
+//     }
+//   }
+//   return null;
+// }
 
 
 function urlsForUser(id) {
@@ -256,7 +257,7 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
 
-  const user = getUserByEmail(req.body.email);
+  const user = getUserByEmail(req.body.email, users);      /*const user = getUserByEmail(req.body.email);*/
   // console.log(user, user.password, req.body.password)
 
   const password = req.body.password;
@@ -308,7 +309,7 @@ app.post("/register", (req, res) => {
     res.status(400).send('Invalide credentials');
     return;
   }
-  const user = getUserByEmail(email);
+  const user = getUserByEmail(email, users);
   console.log(user);
 
   if (user) {
