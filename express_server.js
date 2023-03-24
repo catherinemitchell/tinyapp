@@ -26,16 +26,6 @@ function generateRandomString() {
 console.log(generateRandomString());
 
 
-// function getUserByEmail(email, database) {
-//   for (let user in users) {
-//     if (users[user].email === email) {
-//       return users[user];
-//     }
-//   }
-//   return null;
-// }
-
-
 function urlsForUser(id) {
   const result = {};
   for (let shortURL in urlDatabase) {
@@ -93,8 +83,7 @@ app.get("/hello", (req, res) => {
 
 
 app.get("/urls", (req, res) => {
-  const userID = req.session.user_id;   /*req.cookies["user_id"]*/
-  console.log("+++++++")
+  const userID = req.session.user_id;   
   const user = users[userID];
   const templateVars = {
     user,
@@ -112,9 +101,9 @@ app.get("/urls", (req, res) => {
 
 
 app.post("/urls", (req, res) => {
-  const userID = req.session.user_id;   /*req.cookies["user_id"]*/
+  const userID = req.session.user_id;   
   const templateVars = {
-    user: users[req.session.user_id]  /*users[req.cookies["user_id"]]*/
+    user: users[req.session.user_id]  
   };
   if (templateVars.user === undefined) {
     return res.status(403).send('You must be logged in to shorten urls');
@@ -136,7 +125,7 @@ app.post("/urls", (req, res) => {
 // this will get new form.
 app.get("/urls/new", (req, res) => {
   const templateVars = {
-    user: users[req.session.user_id]   /* users[req.cookies["user_id"]]*/
+    user: users[req.session.user_id]   
   };
   if (templateVars.user === undefined) {
     return res.redirect("/login");
@@ -146,7 +135,7 @@ app.get("/urls/new", (req, res) => {
 
 
 app.get("/urls/:id", (req, res) => {
-  const user_id = req.session.user_id;   /*req.cookies["user_id"]*/
+  const user_id = req.session.user_id;   
   if (!user_id) {
     return res.status(403).send('You must be logged in to view URL pages');
   }
@@ -176,7 +165,7 @@ app.get("/urls/:id", (req, res) => {
 });
 
 
-//does this app.post and the app.post('/urls) do the same thing. Which one is supposed to add to the database.  I have it in both spots. 
+
 app.post("/urls/:id/", (req, res) => {
   const id = req.params.id;
   const longUrl = req.body.longUrl;
@@ -185,16 +174,16 @@ app.post("/urls/:id/", (req, res) => {
     return res.status(404).send('id does not exist');
   }
 
-  if (!req.session.user_id) {        /*if (!req.cookies["user_id"]) {*/
+  if (!req.session.user_id) {        
     return res.status(403).send('user not logged in');
   }
 
-  if (req.session.user_id !== urlDatabase[id].userID) {     /*if (req.cookies["user_id"] !== urlDatabase[id].userID) {*/
+  if (req.session.user_id !== urlDatabase[id].userID) {     
     return res.status(403).send('user does not own the URL');
   }
 
   const templateVars = {
-    user: users[req.session.user_id]   /*users[req.cookies["user_id"]]*/
+    user: users[req.session.user_id]   
   };
   
   urlDatabase[id].longURL = longUrl;
@@ -226,16 +215,13 @@ app.post("/urls/:id/delete", (req, res) => {
     return res.status(404).send('id does not exist');
   }
 
-  if (!req.session.user_id) {   /*if (!req.cookies["user_id"]) {*/
+  if (!req.session.user_id) {   
     return res.status(403).send('user not logged in');
   }
 
-   if (urlDatabase[id].userID !== req.session.user_id) {  /* if (urlDatabase[id].userID !== req.cookies["user_id"]) {*/
+   if (urlDatabase[id].userID !== req.session.user_id) {  
     return res.status(403).send('You are not authorized to delete this URL');
   }
-
-
-
 
   delete urlDatabase[id];
   res.redirect("/urls");
@@ -246,7 +232,7 @@ app.get("/login", (req, res) => {
   // looks in the cookies and checks if there is a cookie named user_id
   //if there is, it puts it in userID, if not it's underfined
   // if userID is not undefined then it redirects to /urls
-  const userID = req.session.user_id;      /*req.cookies['user_id']*/
+  const userID = req.session.user_id;      
   if (userID) {
     return res.redirect("/urls");
   }
@@ -257,7 +243,7 @@ app.get("/login", (req, res) => {
 
 app.post("/login", (req, res) => {
 
-  const user = getUserByEmail(req.body.email, users);      /*const user = getUserByEmail(req.body.email);*/
+  const user = getUserByEmail(req.body.email, users);      
   // console.log(user, user.password, req.body.password)
 
   const password = req.body.password;
@@ -272,7 +258,7 @@ app.post("/login", (req, res) => {
     return;
   }
   req.session.user_id = user.id
-  res.redirect('/urls');      /*res.cookie('user_id', user.id).redirect('/urls');*/
+  res.redirect('/urls');      
 });
 
 
@@ -288,7 +274,7 @@ app.post("/logout", (req, res) => {
 
 app.get("/register", (req, res) => {
 
-  const userID = req.session.user_id;     /*req.cookies['user_id']*/
+  const userID = req.session.user_id;     
   if (userID) {
     return res.redirect("/urls");
   }
@@ -323,7 +309,7 @@ app.post("/register", (req, res) => {
     password: bcrypt.hashSync(password, 10)
   };
 
-  req.session.user_id = id;  /*res.cookie('user_id', id)*/
+  req.session.user_id = id;  
 
   console.log(users[id]);
   res.redirect("/urls");
