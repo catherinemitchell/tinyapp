@@ -23,7 +23,6 @@ const PORT = 8080;
 function generateRandomString() {
   return Math.random().toString(36).substring(2, 8);
 };
-// console.log(generateRandomString());
 
 
 function urlsForUser(id) {
@@ -116,7 +115,6 @@ app.post("/urls", (req, res) => {
     longURL: req.body.longURL
   };
 
-  // console.log(urlDatabase);
   res.redirect(`/urls/${id}`);
 });
 
